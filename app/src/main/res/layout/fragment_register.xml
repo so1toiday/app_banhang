@@ -94,7 +94,7 @@
             </com.google.android.material.textfield.TextInputLayout>
             <ImageView
                 android:id="@+id/btnDate"
-                android:src="@color/black"
+                android:src="@drawable/calendar"
                 android:layout_gravity="center|right"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
