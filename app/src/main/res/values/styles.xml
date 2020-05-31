@@ -21,5 +21,7 @@
         <item name="android:background">@drawable/botron_button2</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="radio">
+    </style>
 
 </resources>

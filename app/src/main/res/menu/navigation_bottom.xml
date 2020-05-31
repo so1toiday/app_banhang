@@ -16,6 +16,11 @@
         app:showAsAction="always"
         android:icon="@drawable/supermarket"
         />
+    <item android:title="Thông Báo"
+        android:id="@+id/mnThongBao"
+        app:showAsAction="always"
+        android:icon="@drawable/notification"
+        />
     <item android:title="Tôi"
         android:id="@+id/mnUser"
         app:showAsAction="always"

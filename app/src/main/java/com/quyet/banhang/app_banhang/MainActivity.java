@@ -12,6 +12,7 @@ import com.quyet.banhang.app_banhang.ui.fragment.CartFragment;
 import com.quyet.banhang.app_banhang.ui.fragment.HomeFragment;
 import com.quyet.banhang.app_banhang.ui.fragment.ProfileFragment;
 import com.quyet.banhang.app_banhang.ui.fragment.SrearchFragment;
+import com.quyet.banhang.app_banhang.ui.fragment.ThongBaoFragment;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.mnUser:
                         fragment=new ProfileFragment();
+                        loadFragment(fragment);
+                        break;
+                    case R.id.mnThongBao:
+                        fragment=new ThongBaoFragment();
                         loadFragment(fragment);
                         break;
                 }

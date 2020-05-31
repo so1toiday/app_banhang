@@ -1,18 +1,25 @@
 package com.quyet.banhang.app_banhang.adapter;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.quyet.banhang.app_banhang.model.SanPham;
 import com.quyet.banhang.app_banhang.ui.fragment.DetailsProductFragment;
 import com.quyet.banhang.app_banhang.ui.fragment.ProductFragment;
 import com.quyet.banhang.app_banhang.ui.fragment.ReviewsProductFragment;
 
+import java.io.Serializable;
+
 public class ProductViewPagerAdapter extends FragmentStatePagerAdapter {
-    public ProductViewPagerAdapter(@NonNull FragmentManager fm) {
+    SanPham sanPham;
+    public ProductViewPagerAdapter(@NonNull FragmentManager fm, SanPham sanPham) {
         super(fm);
+        this.sanPham=sanPham;
     }
 
     @NonNull
@@ -22,6 +29,9 @@ public class ProductViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 fragment = new ProductFragment();
+                Bundle b=new Bundle();
+                b.putSerializable("sanphams", (Serializable) sanPham.getSanPhams());
+                fragment.setArguments(b);
                 break;
             case 1:
                 fragment = new DetailsProductFragment();

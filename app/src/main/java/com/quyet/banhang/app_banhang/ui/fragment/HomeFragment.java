@@ -59,7 +59,6 @@ public class HomeFragment extends Fragment {
                 CategoryAdapter adapter=new CategoryAdapter(getContext(),list);
                 re.setAdapter(adapter);
                 re.setLayoutManager(new GridLayoutManager(getContext(),4));
-
             }
 
             @Override
@@ -87,6 +86,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        reference.child("products").keepSynced(true);
 //        List<String> image=new ArrayList<>();
 //        List<DetailsSanPham> sanPhams=new ArrayList<>();
 //        sanPhams.add(new DetailsSanPham("Xanh","29",299000,1000));

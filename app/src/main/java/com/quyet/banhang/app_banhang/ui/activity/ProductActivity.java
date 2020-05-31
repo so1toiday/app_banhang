@@ -18,14 +18,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.adapter.ImageProductAdapter;
 import com.quyet.banhang.app_banhang.adapter.ProductViewPagerAdapter;
+import com.quyet.banhang.app_banhang.model.Cart;
+import com.quyet.banhang.app_banhang.model.DetailsSanPham;
 import com.quyet.banhang.app_banhang.model.SanPham;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -41,6 +40,7 @@ public class ProductActivity extends AppCompatActivity {
     CircleIndicator circleIndicator;
     FirebaseAuth auth;
     DatabaseReference reference;
+    private static int IndexSP=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class ProductActivity extends AppCompatActivity {
                 handler.postDelayed(runnable, 5000);
             }
         };
-        ProductViewPagerAdapter adapterProduct = new ProductViewPagerAdapter(getSupportFragmentManager());
+        ProductViewPagerAdapter adapterProduct = new ProductViewPagerAdapter(getSupportFragmentManager(),sanPham);
         vpProduct.setAdapter(adapterProduct);
         mTabProduct.setupWithViewPager(vpProduct);
     }
@@ -96,6 +96,9 @@ public class ProductActivity extends AppCompatActivity {
         handler.removeCallbacks(runnable);
     }
 
+    public static void setLoai(int index){
+        IndexSP=index;
+    }
     private void findView() {
         vpProduct = findViewById(R.id.vpProduct);
         vpImage = findViewById(R.id.vpImage);
@@ -111,21 +114,15 @@ public class ProductActivity extends AppCompatActivity {
         final FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             mAddToCart.setEnabled(false);
-//            reference.child(user.getUid()).child(sanPham.getId()).child("count").addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    int count=0;
-//                    count = dataSnapshot.getValue(Integer.class);
-//                    count++;
-//                    reference.child(user.getUid()).child(sanPham.getId()).child("count").setValue(count);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-            reference.child(user.getUid()).child(sanPham.getId()).setValue(sanPham).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Cart c=new Cart();
+            c.setName(sanPham.getName());
+            c.setDescreption(sanPham.getDescreption());
+            c.setCategory(sanPham.getCategory());
+            c.setImage(sanPham.getImage().get(0));
+            c.setCount(1);
+            DetailsSanPham sp=sanPham.getSanPhams().get(IndexSP);
+            c.setSanPham(sp);
+            reference.child(user.getUid()).child(sanPham.getId()).setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                               @Override
                                                                                                               public void onComplete(@NonNull Task<Void> task) {
                                                                                                                   mAddToCart.setEnabled(true);

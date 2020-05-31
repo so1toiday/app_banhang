@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.quyet.banhang.app_banhang.R;
+import com.quyet.banhang.app_banhang.function.FormatMany;
 import com.quyet.banhang.app_banhang.model.SanPham;
 import com.quyet.banhang.app_banhang.ui.activity.ProductActivity;
 import com.squareup.picasso.Picasso;
@@ -37,7 +38,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewhold
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.viewholder holder, int position) {
         SanPham s=list.get(position);
-        holder.mProductPrice.setText(s.getSanPhams().get(0).getPrice()+"VNĐ");
+        holder.mProductPrice.setText(FormatMany.getMany(s.getSanPhams().get(0).getPrice()));
         holder.mProductName.setText(s.getName());
         Picasso.with(context).load(s.getImage().get(0)).into(holder.mProductImage);
     }

@@ -1,10 +1,38 @@
 package com.quyet.banhang.app_banhang.model;
 
-import android.widget.EditText;
 
 public class User
 {
     private String UID;
+    private  String Email,Name,Phone,Birthday,Image,Address;
+    private  boolean Sex;
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public User(String UID, String email, String name, String phone, String birthday, String image, String address, boolean sex) {
+        this.UID = UID;
+        Email = email;
+        Name = name;
+        Phone = phone;
+        Birthday = birthday;
+        Image = image;
+        Address = address;
+        Sex = sex;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
+    }
 
     public String getUID() {
         return UID;
@@ -23,9 +51,15 @@ public class User
         this.UID = UID;
     }
 
-    private  String Email,Name,Phone,Birthday;
-    private  boolean Sex;
-
+    public User(String UID, String email, String name, String phone, String birthday, String image, boolean sex) {
+        this.UID = UID;
+        Email = email;
+        Name = name;
+        Phone = phone;
+        Birthday = birthday;
+        Image = image;
+        Sex = sex;
+    }
 
     public User() {
     }
