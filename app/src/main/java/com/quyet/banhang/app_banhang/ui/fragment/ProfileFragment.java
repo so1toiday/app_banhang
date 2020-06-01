@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +22,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quyet.banhang.app_banhang.MainActivity;
 import com.quyet.banhang.app_banhang.R;
+import com.quyet.banhang.app_banhang.adapter.ProfileAdapter;
+import com.quyet.banhang.app_banhang.model.MenuProfile;
 import com.quyet.banhang.app_banhang.model.User;
 import com.quyet.banhang.app_banhang.ui.activity.LoginActivity;
 import com.quyet.banhang.app_banhang.ui.activity.SettingActivity;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,6 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ProfileFragment extends Fragment {
 
+    RecyclerView mRecycleviewMenu;
+    Button mLogout;
     DatabaseReference reference;
     TextView mEmail,mName;
     Button mButtonEdit,mLogin;
@@ -40,6 +50,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     User user;
+    List<MenuProfile>  listmenu;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,6 +68,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         reference= FirebaseDatabase.getInstance().getReference("user");
+        listmenu=new ArrayList<>();
+        addList();
         auth=FirebaseAuth.getInstance();
         firebaseUser=auth.getCurrentUser();
         findView(view);
@@ -77,6 +90,7 @@ public class ProfileFragment extends Fragment {
             mName.setVisibility(View.VISIBLE);
             mButtonEdit.setVisibility(View.VISIBLE);
             mLogin.setVisibility(View.GONE);
+            mLogout.setVisibility(View.VISIBLE);
             String uid=firebaseUser.getUid();
             mEmail.setText(firebaseUser.getEmail());
             reference.child(uid).addValueEventListener(new ValueEventListener() {
@@ -93,14 +107,32 @@ public class ProfileFragment extends Fragment {
 
                 }
             });
+            mLogout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getContext(), MainActivity.class));
+                    getActivity().finish();
+                }
+            });
         }else{
             mEmail.setVisibility(View.GONE);
             mName.setVisibility(View.GONE);
             mButtonEdit.setVisibility(View.GONE);
-            mLogin.setVisibility(View.INVISIBLE);
+            mLogin.setVisibility(View.VISIBLE);
+            mLogout.setVisibility(View.GONE);
         }
 
 
+        ProfileAdapter adapter=new ProfileAdapter(getContext(),listmenu);
+        mRecycleviewMenu.setAdapter(adapter);
+        mRecycleviewMenu.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void addList() {
+        listmenu.add(new MenuProfile("Tất Cả Đơn Hàng",R.drawable.supermarket));
+        listmenu.add(new MenuProfile("Đổi Mật Khẩu",R.drawable.changepassword));
+        listmenu.add(new MenuProfile("Đánh Giá APP",R.drawable.write));
     }
 
     private void findView(View view) {
@@ -109,6 +141,8 @@ public class ProfileFragment extends Fragment {
         mButtonEdit=view.findViewById(R.id.btnEditProfile);
         mImageUser=view.findViewById(R.id.imUser);
         mLogin=view.findViewById(R.id.btnDangNhap);
+        mLogout=view.findViewById(R.id.btnLogout);
+        mRecycleviewMenu=view.findViewById(R.id.reListMenu);
     }
 }
 
