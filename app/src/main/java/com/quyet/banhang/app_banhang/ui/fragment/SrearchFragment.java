@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,16 +36,17 @@ public class SrearchFragment extends Fragment {
     SearchView mSearch;
     DatabaseReference reference;
     LinearLayout lEmpty;
+    FirebaseUser user;
 
     public SrearchFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_srearch, container, false);
     }
 
@@ -51,15 +54,24 @@ public class SrearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findView(view);
+        Bundle bundle=getArguments();
+        mSearch.onActionViewExpanded();
         mSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                reference.child("products").orderByChild("name").startAt(query).endAt(query+"\uf8ff").addValueEventListener(new ValueEventListener() {
+            public boolean onQueryTextSubmit(final String query) {
+                reference.child("products").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         List<SanPham> list=new ArrayList<>();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                            list.add(snapshot.getValue(SanPham.class));
+                            SanPham sp=snapshot.getValue(SanPham.class);
+                          for(int i=0;i<sp.getKey().size();i++){
+                              if(sp.getKey().get(i).contains(query)){
+                                  list.add(sp);
+                                  continue;
+                              }
+                          }
+
                         }
                         if(list.size()>0){
                             mRecycleview.setVisibility(View.VISIBLE);
@@ -78,7 +90,7 @@ public class SrearchFragment extends Fragment {
 
                     }
                 });
-                return true;
+                return false;
             }
 
             @Override
@@ -86,6 +98,10 @@ public class SrearchFragment extends Fragment {
                 return false;
             }
         });
+        if(bundle!=null){
+            String query=bundle.getString("query");
+            mSearch.setQuery(query,true);
+        }
     }
 
     private void findView(View view) {
@@ -93,5 +109,11 @@ public class SrearchFragment extends Fragment {
         mSearch=view.findViewById(R.id.svSearch);
         reference= FirebaseDatabase.getInstance().getReference();
         lEmpty=view.findViewById(R.id.lEmpty);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        user= FirebaseAuth.getInstance().getCurrentUser();
     }
 }

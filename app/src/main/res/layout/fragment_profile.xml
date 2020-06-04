@@ -40,23 +40,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
-
             <Button
                 android:id="@+id/btnEditProfile"
+                android:layout_gravity="left"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                style="@style/FirebaseUI.VerifyPhoneButton"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/botron_button4"
                 android:text="Chi Tiết"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
             <Button
+                android:layout_gravity="left"
                 android:id="@+id/btnDangNhap"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/botron_button4"
+                style="@style/FirebaseUI.VerifyPhoneButton"
                 android:text="Đăng Nhập"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"

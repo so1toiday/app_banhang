@@ -3,6 +3,7 @@ package com.quyet.banhang.app_banhang.model;
 import java.io.Serializable;
 
 public class Cart implements Serializable {
+    String idCart;
     String id;
     String name;
     String descreption;
@@ -10,6 +11,25 @@ public class Cart implements Serializable {
     String image;
     String category;
     int count;
+
+    public String getIdCart() {
+        return idCart;
+    }
+
+    public void setIdCart(String idCart) {
+        this.idCart = idCart;
+    }
+
+    public Cart(String idCart, String id, String name, String descreption, DetailsSanPham sanPham, String image, String category, int count) {
+        this.idCart = idCart;
+        this.id = id;
+        this.name = name;
+        this.descreption = descreption;
+        this.sanPham = sanPham;
+        this.image = image;
+        this.category = category;
+        this.count = count;
+    }
 
     public Cart(String id, String name, String descreption, DetailsSanPham sanPham, String image, String category, int count) {
         this.id = id;

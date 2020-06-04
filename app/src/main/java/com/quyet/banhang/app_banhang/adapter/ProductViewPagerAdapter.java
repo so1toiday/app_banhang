@@ -35,9 +35,15 @@ public class ProductViewPagerAdapter extends FragmentStatePagerAdapter {
                 break;
             case 1:
                 fragment = new DetailsProductFragment();
+                Bundle b1=new Bundle();
+                b1.putSerializable("sanpham", sanPham);
+                fragment.setArguments(b1);
                 break;
             case 2:
                 fragment = new ReviewsProductFragment();
+                Bundle b2=new Bundle();
+                b2.putString("id",sanPham.getId());
+                fragment.setArguments(b2);
                 break;
 
         }

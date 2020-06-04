@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.ThongBaoActivity"></activity>
+        <activity android:name=".ui.activity.CategoryActivity"></activity>
+        <activity android:name=".ui.activity.DonHangActivity" />
+        <activity android:name=".ui.activity.ChangePasswordActivity" />
+        <activity android:name=".ui.activity.ThongBaoActivity" />
         <activity android:name=".ui.activity.ProductActivity" />
         <activity android:name=".ui.activity.ForgetPasswrodActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
@@ -22,8 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.activity.SettingActivity"/>
+        <activity android:name=".ui.activity.SettingActivity" />
     </application>
 
 </manifest>

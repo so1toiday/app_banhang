@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.DetailsProductFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
 
-</FrameLayout>
+        <TableRow>
+
+            <TextView
+                android:layout_marginRight="20dp"
+                android:text="Tên:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_marginRight="20dp"
+                android:text="Mô tả:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDescreption"
+                android:textColor="@color/black" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_marginRight="20dp"
+                android:text="Thể loại: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCategory"
+                android:textColor="@color/black" />
+        </TableRow>
+
+    </TableLayout>
+
+
+</ScrollView>

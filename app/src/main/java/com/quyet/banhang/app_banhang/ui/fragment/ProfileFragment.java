@@ -122,13 +122,10 @@ public class ProfileFragment extends Fragment {
             mLogin.setVisibility(View.VISIBLE);
             mLogout.setVisibility(View.GONE);
         }
-
-
         ProfileAdapter adapter=new ProfileAdapter(getContext(),listmenu);
         mRecycleviewMenu.setAdapter(adapter);
         mRecycleviewMenu.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
+}
     private void addList() {
         listmenu.add(new MenuProfile("Tất Cả Đơn Hàng",R.drawable.supermarket));
         listmenu.add(new MenuProfile("Đổi Mật Khẩu",R.drawable.changepassword));

@@ -44,15 +44,15 @@
         app:layout_constraintVertical_bias="0.354">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/empty" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/search" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Chưa có sản phẩm nào"
+            android:text="Tìm kiếm sản phẩm"
             android:textStyle="bold" />
     </LinearLayout>
 

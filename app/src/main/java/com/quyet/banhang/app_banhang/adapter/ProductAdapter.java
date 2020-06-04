@@ -28,6 +28,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewhold
         this.context = context;
     }
 
+    public void updateDatachange(List<SanPham> list){
+        this.list=list;
+    }
+
     @NonNull
     @Override
     public ProductAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

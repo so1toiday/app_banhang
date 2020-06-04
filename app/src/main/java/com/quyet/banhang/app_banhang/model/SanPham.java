@@ -11,6 +11,15 @@ public class SanPham  implements Serializable {
     List<String> image;
     double star;
     String category;
+    List<String> key;
+
+    public List<String> getKey() {
+        return key;
+    }
+
+    public void setKey(List<String> key) {
+        this.key = key;
+    }
 
     public SanPham() {
     }

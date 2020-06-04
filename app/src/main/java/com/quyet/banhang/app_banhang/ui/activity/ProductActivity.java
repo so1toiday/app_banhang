@@ -3,9 +3,13 @@ package com.quyet.banhang.app_banhang.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,24 +27,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.adapter.ImageProductAdapter;
 import com.quyet.banhang.app_banhang.adapter.ProductViewPagerAdapter;
+import com.quyet.banhang.app_banhang.function.FormatMany;
 import com.quyet.banhang.app_banhang.model.Cart;
 import com.quyet.banhang.app_banhang.model.DetailsSanPham;
 import com.quyet.banhang.app_banhang.model.SanPham;
 
-import me.relex.circleindicator.CircleIndicator;
-
 public class ProductActivity extends AppCompatActivity {
+    ConstraintLayout containerBottom;
     SanPham sanPham;
     ViewPager vpProduct, vpImage;
     TabLayout mTabProduct;
     Handler handler;
     Runnable runnable;
-    TextView mAddToCart;
+    TextView mAddToCart,mGia;
     int index = 0;
-    CircleIndicator circleIndicator;
     FirebaseAuth auth;
     DatabaseReference reference;
     private static int IndexSP=0;
+    BroadcastReceiver receiver;
+    IntentFilter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,7 @@ public class ProductActivity extends AppCompatActivity {
         });
         ImageProductAdapter ImageAdapter = new ImageProductAdapter(this, sanPham.getImage());
         vpImage.setAdapter(ImageAdapter);
-        circleIndicator.setViewPager(vpImage);
+        mGia.setText(FormatMany.getMany(sanPham.getSanPhams().get(0).getPrice()));
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -81,19 +86,50 @@ public class ProductActivity extends AppCompatActivity {
         };
         ProductViewPagerAdapter adapterProduct = new ProductViewPagerAdapter(getSupportFragmentManager(),sanPham);
         vpProduct.setAdapter(adapterProduct);
+        vpProduct.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==2){
+                    containerBottom.setVisibility(View.GONE);
+                }else {
+                    containerBottom.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabProduct.setupWithViewPager(vpProduct);
+        filter=new IntentFilter("quyet.product.pro");
+        receiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                    Bundle b=intent.getExtras();
+                    DetailsSanPham s= (DetailsSanPham) b.getSerializable("infosp");
+                    mGia.setText(FormatMany.getMany(s.getPrice()));
+            }
+        };
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         handler.postDelayed(runnable, 5000);
+        registerReceiver(receiver,filter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(runnable);
+        unregisterReceiver(receiver);
     }
 
     public static void setLoai(int index){
@@ -103,11 +139,11 @@ public class ProductActivity extends AppCompatActivity {
         vpProduct = findViewById(R.id.vpProduct);
         vpImage = findViewById(R.id.vpImage);
         mTabProduct = findViewById(R.id.tabProducts);
-        circleIndicator = findViewById(R.id.circleIndicator);
         reference = FirebaseDatabase.getInstance().getReference("cart");
         auth = FirebaseAuth.getInstance();
         mAddToCart = findViewById(R.id.btnAddToCart);
-
+        mGia=findViewById(R.id.tvGia);
+        containerBottom=findViewById(R.id.containerBottom);
     }
 
     public void clickAddToCart(View view) {
@@ -122,7 +158,7 @@ public class ProductActivity extends AppCompatActivity {
             c.setCount(1);
             DetailsSanPham sp=sanPham.getSanPhams().get(IndexSP);
             c.setSanPham(sp);
-            reference.child(user.getUid()).child(sanPham.getId()).setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
+            reference.child(user.getUid()).push().setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                               @Override
                                                                                                               public void onComplete(@NonNull Task<Void> task) {
                                                                                                                   mAddToCart.setEnabled(true);

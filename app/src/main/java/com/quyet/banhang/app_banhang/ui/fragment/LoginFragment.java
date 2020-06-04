@@ -88,6 +88,7 @@ public class LoginFragment extends Fragment {
                         dialog.dismiss();
                         if (task.isSuccessful()) {
                             startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
                         } else {
                             Toast.makeText(getContext(), "Tài khoản hoặc mật khẩu không chính xác", Toast.LENGTH_SHORT).show();
                         }

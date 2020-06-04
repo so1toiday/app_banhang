@@ -1,13 +1,14 @@
 package com.quyet.banhang.app_banhang.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quyet.banhang.app_banhang.MainActivity;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.adapter.CategoryAdapter;
 import com.quyet.banhang.app_banhang.adapter.ProductAdapter;
-import com.quyet.banhang.app_banhang.model.DetailsSanPham;
 import com.quyet.banhang.app_banhang.model.SanPham;
 import com.quyet.banhang.app_banhang.model.TheLoai;
 
@@ -31,9 +32,13 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     RecyclerView re,reProduct;
     DatabaseReference reference;
+    CategoryAdapter adapter;
+    SearchView sv;
+
     public HomeFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -48,17 +53,40 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findView(view);
         getChildFragmentManager().beginTransaction().replace(R.id.banner, new BannerFragment()).commit();
-        reference.child("category").limitToFirst(3).addValueEventListener(new ValueEventListener() {
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                      @Override
+                                      public boolean onQueryTextSubmit(String query) {
+                                          Fragment fragment=new SrearchFragment();
+                                          Bundle b=new Bundle();
+                                          b.putString("query",query);
+                                          fragment.setArguments(b);
+                                          ((MainActivity)getActivity()).replaceFragments(fragment);
+                                          return false;
+                                      }
+
+                                      @Override
+                                      public boolean onQueryTextChange(String newText) {
+                                          return false;
+                                      }
+                                  }
+        );
+        reference.child("category").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<TheLoai> list=new ArrayList<>();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                     list.add(snapshot.getValue(TheLoai.class));
                 }
-                list.add(new TheLoai("Tất Cả","https://thoitrangngaynay.com/upload/images/khuyen-mai-doi-bep-cu-lay-bep-moi.png"));
-                CategoryAdapter adapter=new CategoryAdapter(getContext(),list);
-                re.setAdapter(adapter);
-                re.setLayoutManager(new GridLayoutManager(getContext(),4));
+                if(adapter!=null){
+                    adapter.setOnDatachange(list);
+                }else{
+                    adapter=new CategoryAdapter(getContext(),list);
+                    re.setAdapter(adapter);
+                    GridLayoutManager gi = new GridLayoutManager(getContext(), 2);
+                    gi.setOrientation(RecyclerView.HORIZONTAL);
+                    re.setLayoutManager(gi);
+                }
+
             }
 
             @Override
@@ -87,30 +115,13 @@ public class HomeFragment extends Fragment {
             }
         });
         reference.child("products").keepSynced(true);
-//        List<String> image=new ArrayList<>();
-//        List<DetailsSanPham> sanPhams=new ArrayList<>();
-//        sanPhams.add(new DetailsSanPham("Xanh","29",299000,1000));
-//        sanPhams.add(new DetailsSanPham("Đỏ","30",291000,1000));
-//        sanPhams.add(new DetailsSanPham("Tím","29",270000,1000));
-//
-//        image.add("https://gamek.mediacdn.vn/zoom/700_438/2016/3-1473916716742-crop-1473916810927.jpg");
-//        image.add("https://i.pinimg.com/originals/89/06/1a/89061ab197489510aef0867939274388.jpg");
-//        image.add("https://i.pinimg.com/564x/c7/20/fd/c720fd4a318846a79fe30930eaf04188.jpg");
-//        SanPham sanPham=new SanPham();
-//        sanPham.setName("Áo Da Calic");
-//        sanPham.setDescreption("Áo da calic rất pro");
-//        sanPham.setCategory("Quần Áo");
-//        sanPham.setStar(5);
-//        sanPham.setImage(image);
-//        sanPham.setSanPhams(sanPhams);
-//        reference.child("products").push().setValue(sanPham);
-
     }
 
     private void findView(View view) {
         re=view.findViewById(R.id.re);
         reference= FirebaseDatabase.getInstance().getReference();
         reProduct=view.findViewById(R.id.reProduct);
+        sv=view.findViewById(R.id.svSearch);
     }
 }
 

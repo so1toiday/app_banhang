@@ -3,6 +3,7 @@ package com.quyet.banhang.app_banhang;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,6 +17,8 @@ import com.quyet.banhang.app_banhang.ui.fragment.ThongBaoFragment;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public void replaceFragments(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment, fragment)
+                .commit();
     }
 
     private void loadFragment(Fragment fragment) {

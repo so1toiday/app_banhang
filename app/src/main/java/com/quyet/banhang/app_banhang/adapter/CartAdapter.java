@@ -36,6 +36,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewholder> {
         this.UID=UID;
         referenceCount= FirebaseDatabase.getInstance().getReference("cart").child(UID);
     }
+    public void setList( List<Cart> list){
+        this.list=list;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

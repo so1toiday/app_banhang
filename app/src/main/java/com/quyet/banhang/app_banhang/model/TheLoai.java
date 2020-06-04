@@ -1,6 +1,8 @@
 package com.quyet.banhang.app_banhang.model;
 
-public class TheLoai {
+import java.io.Serializable;
+
+public class TheLoai implements Serializable {
     private String title;
     private String image;
 

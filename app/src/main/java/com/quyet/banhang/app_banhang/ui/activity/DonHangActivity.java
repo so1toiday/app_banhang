@@ -4,42 +4,42 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.quyet.banhang.app_banhang.R;
-import com.quyet.banhang.app_banhang.adapter.LoginViewPagerAdapter;
+import com.quyet.banhang.app_banhang.adapter.DonHangViewpagerAdapter;
 
-public class LoginActivity extends AppCompatActivity {
-    TabLayout tab;
-    ViewPager vp;
+public class DonHangActivity extends AppCompatActivity {
+    ViewPager mPage;
+    TabLayout mtab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        findview();
-        LoginViewPagerAdapter adapter=new LoginViewPagerAdapter(getSupportFragmentManager());
-        vp.setAdapter(adapter);
-        tab.setSelectedTabIndicatorColor(Color.parseColor("#FFA725"));
-        tab.setupWithViewPager(vp);
+        setContentView(R.layout.activity_don_hang);
+        initToolbar();
+        initView();
+        DonHangViewpagerAdapter adapter=new DonHangViewpagerAdapter(getSupportFragmentManager());
+        mPage.setAdapter(adapter);
+        mtab.setupWithViewPager(mPage);
+        mtab.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
-
-    private void findview() {
+    private void initView() {
+        mPage=findViewById(R.id.vpPage);
+        mtab=findViewById(R.id.tabDonHang);
+    }
+    private void initToolbar() {
         Toolbar toolbar=findViewById(R.id.toolbar);
-        toolbar.setTitle("Đăng nhập / Đăng ký");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Đơn Hàng");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        tab=findViewById(R.id.tlLogin);
-        vp=findViewById(R.id.vpLogin);
     }
 }
