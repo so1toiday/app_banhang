@@ -12,6 +12,15 @@ public class SanPham  implements Serializable {
     double star;
     String category;
     List<String> key;
+    int daban;
+
+    public int getDaban() {
+        return daban;
+    }
+
+    public void setDaban(int daban) {
+        this.daban = daban;
+    }
 
     public List<String> getKey() {
         return key;

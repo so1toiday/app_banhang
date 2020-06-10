@@ -11,6 +11,42 @@ public class Cart implements Serializable {
     String image;
     String category;
     int count;
+    String date;
+    String uid;
+    String madonhang;
+    String pid;
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getMadonhang() {
+        return madonhang;
+    }
+
+    public void setMadonhang(String madonhang) {
+        this.madonhang = madonhang;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getIdCart() {
         return idCart;

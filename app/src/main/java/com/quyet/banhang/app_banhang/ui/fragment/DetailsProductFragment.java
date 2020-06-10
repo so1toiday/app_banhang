@@ -18,8 +18,9 @@ import com.quyet.banhang.app_banhang.model.SanPham;
  * A simple {@link Fragment} subclass.
  */
 public class DetailsProductFragment extends Fragment {
-    TextView mName,mCategory,mDescreption;
+    TextView mName,mCategory,mDescreption,mDaBan;
     SanPham sp;
+
 
     public DetailsProductFragment() {
         // Required empty public constructor
@@ -42,11 +43,13 @@ public class DetailsProductFragment extends Fragment {
         mName.setText(sp.getName());
         mDescreption.setText(sp.getDescreption());
         mCategory.setText(sp.getCategory());
+        mDaBan.setText(String.valueOf(sp.getDaban()));
     }
 
     private void initView(View view) {
         mName=view.findViewById(R.id.tvName);
         mDescreption=view.findViewById(R.id.tvDescreption);
         mCategory=view.findViewById(R.id.tvCategory);
+        mDaBan=view.findViewById(R.id.tvDaBan);
     }
 }

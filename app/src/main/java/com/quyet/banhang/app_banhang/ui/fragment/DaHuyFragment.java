@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.adapter.DangGiaoAdapter;
 import com.quyet.banhang.app_banhang.adapter.DatHangAdapter;
+import com.quyet.banhang.app_banhang.adapter.ThanhCongAdapter;
 import com.quyet.banhang.app_banhang.model.Cart;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class DaHuyFragment extends Fragment {
     TextView mEmptyTextView;
     public DaHuyFragment() {
     }
-    DangGiaoAdapter adapter;
+    ThanhCongAdapter adapter;
 
 
     @Override
@@ -68,7 +69,7 @@ public class DaHuyFragment extends Fragment {
                     }
 
                     if(adapter==null){
-                        adapter=new DangGiaoAdapter(getContext(),list);
+                        adapter=new ThanhCongAdapter(getContext(),list);
                         re.setAdapter(adapter);
                         re.setLayoutManager(new LinearLayoutManager(getContext()));
                     }else {

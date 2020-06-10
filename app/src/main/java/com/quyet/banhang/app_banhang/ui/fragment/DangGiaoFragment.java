@@ -39,6 +39,7 @@ public class DangGiaoFragment extends Fragment {
 
     public DangGiaoFragment() {
     }
+
     DangGiaoAdapter adapter;
 
 
@@ -52,26 +53,28 @@ public class DangGiaoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        if(user!=null){
+        if (user != null) {
             reference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    List<Cart> list=new ArrayList<>();
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                        list.add(snapshot.getValue(Cart.class));
+                    List<Cart> list = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Cart c = snapshot.getValue(Cart.class);
+                        c.setIdCart(snapshot.getKey());
+                        list.add(c);
                     }
-                    if(list.size()>0){
+                    if (list.size() > 0) {
                         mEmptyTextView.setVisibility(View.GONE);
                         re.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         mEmptyTextView.setVisibility(View.VISIBLE);
                         re.setVisibility(View.GONE);
                     }
-                    if(adapter==null){
-                        adapter=new DangGiaoAdapter(getContext(),list);
+                    if (adapter == null) {
+                        adapter = new DangGiaoAdapter(getContext(), list);
                         re.setAdapter(adapter);
                         re.setLayoutManager(new LinearLayoutManager(getContext()));
-                    }else {
+                    } else {
                         adapter.setList(list);
                     }
 
@@ -86,10 +89,9 @@ public class DangGiaoFragment extends Fragment {
     }
 
     private void initView(View view) {
-        re=view.findViewById(R.id.reDangGiao);
-        reference= FirebaseDatabase.getInstance().getReference("comming");
-        user= FirebaseAuth.getInstance().getCurrentUser();
-        mEmptyTextView=view.findViewById(R.id.tvEmpty);
-
+        re = view.findViewById(R.id.reDangGiao);
+        reference = FirebaseDatabase.getInstance().getReference("comminguser");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mEmptyTextView = view.findViewById(R.id.tvEmpty);
     }
 }

@@ -35,8 +35,12 @@ import com.quyet.banhang.app_banhang.function.FormatMany;
 import com.quyet.banhang.app_banhang.model.Cart;
 import com.quyet.banhang.app_banhang.ui.activity.LoginActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,12 +114,30 @@ public class CartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (user == null) return;
-                DatabaseReference orderreferen = reference.child("order").child(user.getUid());
+                final SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm dd/MM/yyy");
+                final DatabaseReference orderreferen = reference.child("order").child(user.getUid());
+                final DatabaseReference shopreference=reference.child("shoporder");
                 for (int i = 0; i < list.size(); i++) {
-                    orderreferen.push().setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                     final String key=orderreferen.push().getKey();
+                    shopreference.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Map<String,Object> map=new HashMap<>();
+                            map.put("uid",user.getUid());
+                            map.put("date",dateFormat.format(new Date()));
+                            map.put("madonhang","#"+key);
+                            shopreference.child(key).updateChildren(map);
+                        }
+                    });
+                    orderreferen.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             count++;
+                            Map<String,Object> map=new HashMap<>();
+                            map.put("date",dateFormat.format(new Date()));
+                            map.put("uid",user.getUid());
+                            map.put("madonhang","#"+key);
+                            orderreferen.child(key).updateChildren(map);
                             if (count >= list.size() - 1) {
                                 reference.child("cart").child(user.getUid()).removeValue();
                                 Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();

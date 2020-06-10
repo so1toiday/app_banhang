@@ -75,7 +75,6 @@ public class ProductRadioAdapter extends RecyclerView.Adapter<ProductRadioAdapte
                     i.putExtras(b);
                     context.sendBroadcast(i);
                     notifyDataSetChanged();
-
                 }
             });
 

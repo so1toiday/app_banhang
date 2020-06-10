@@ -74,7 +74,6 @@ public class SettingActivity extends AppCompatActivity {
                 mAddress.setText(user.getAddress());
                 mPhone.setText(user.getPhone());
                 mEmail.setText(firebaseUser.getEmail());
-                Log.d("kaka","123321 "+user.getBirthday());
                 mBrithday.setText(user.getBirthday());
                 if(user.isSex()){
                     mNam.setChecked(true);
@@ -145,7 +144,6 @@ public class SettingActivity extends AppCompatActivity {
         user.setName(mName.getText().toString());
         user.setEmail(mEmail.getText().toString());
         user.setImage(urlImage);
-
         mReference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

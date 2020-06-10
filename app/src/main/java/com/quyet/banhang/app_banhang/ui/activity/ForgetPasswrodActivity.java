@@ -24,6 +24,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.function.Validate;
+import com.quyet.banhang.app_banhang.model.TheLoai;
+
+import java.util.List;
 
 public class ForgetPasswrodActivity extends AppCompatActivity {
     Button mbtnForgetPassword;

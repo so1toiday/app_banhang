@@ -55,12 +55,7 @@
                 android:id="@+id/tvCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/btnDaNhan"
-                style="@style/FirebaseUI.Button.AccountChooser"
-                android:text="Đã nhận hàng"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+
 
         </LinearLayout>
 

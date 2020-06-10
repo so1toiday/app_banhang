@@ -29,9 +29,13 @@
                 android:text="Mô tả:"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvDescreption"
-                android:textColor="@color/black" />
+           <LinearLayout>
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:id="@+id/tvDescreption"
+                   android:textColor="@color/black" />
+           </LinearLayout>
         </TableRow>
 
         <TableRow android:layout_marginTop="8dp">
@@ -43,6 +47,17 @@
 
             <TextView
                 android:id="@+id/tvCategory"
+                android:textColor="@color/black" />
+        </TableRow>
+        <TableRow android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_marginRight="20dp"
+                android:text="Đã Bán: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDaBan"
                 android:textColor="@color/black" />
         </TableRow>
 

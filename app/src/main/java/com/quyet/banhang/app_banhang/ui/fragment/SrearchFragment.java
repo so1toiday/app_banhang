@@ -65,12 +65,9 @@ public class SrearchFragment extends Fragment {
                         List<SanPham> list=new ArrayList<>();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             SanPham sp=snapshot.getValue(SanPham.class);
-                          for(int i=0;i<sp.getKey().size();i++){
-                              if(sp.getKey().get(i).contains(query)){
-                                  list.add(sp);
-                                  continue;
-                              }
-                          }
+                            if(sp.getName().contains(query)){
+                                list.add(sp);
+                            }
 
                         }
                         if(list.size()>0){

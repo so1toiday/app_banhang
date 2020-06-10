@@ -39,11 +39,11 @@ public class ProductActivity extends AppCompatActivity {
     TabLayout mTabProduct;
     Handler handler;
     Runnable runnable;
-    TextView mAddToCart,mGia;
+    TextView mAddToCart, mGia;
     int index = 0;
     FirebaseAuth auth;
     DatabaseReference reference;
-    private static int IndexSP=0;
+    private static int IndexSP = 0;
     BroadcastReceiver receiver;
     IntentFilter filter;
 
@@ -84,7 +84,7 @@ public class ProductActivity extends AppCompatActivity {
                 handler.postDelayed(runnable, 5000);
             }
         };
-        ProductViewPagerAdapter adapterProduct = new ProductViewPagerAdapter(getSupportFragmentManager(),sanPham);
+        ProductViewPagerAdapter adapterProduct = new ProductViewPagerAdapter(getSupportFragmentManager(), sanPham);
         vpProduct.setAdapter(adapterProduct);
         vpProduct.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -94,9 +94,9 @@ public class ProductActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position==2){
+                if (position == 2) {
                     containerBottom.setVisibility(View.GONE);
-                }else {
+                } else {
                     containerBottom.setVisibility(View.VISIBLE);
                 }
             }
@@ -107,13 +107,13 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
         mTabProduct.setupWithViewPager(vpProduct);
-        filter=new IntentFilter("quyet.product.pro");
-        receiver=new BroadcastReceiver() {
+        filter = new IntentFilter("quyet.product.pro");
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                    Bundle b=intent.getExtras();
-                    DetailsSanPham s= (DetailsSanPham) b.getSerializable("infosp");
-                    mGia.setText(FormatMany.getMany(s.getPrice()));
+                Bundle b = intent.getExtras();
+                DetailsSanPham s = (DetailsSanPham) b.getSerializable("infosp");
+                mGia.setText(FormatMany.getMany(s.getPrice()));
             }
         };
     }
@@ -122,7 +122,7 @@ public class ProductActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         handler.postDelayed(runnable, 5000);
-        registerReceiver(receiver,filter);
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -132,9 +132,10 @@ public class ProductActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
-    public static void setLoai(int index){
-        IndexSP=index;
+    public static void setLoai(int index) {
+        IndexSP = index;
     }
+
     private void findView() {
         vpProduct = findViewById(R.id.vpProduct);
         vpImage = findViewById(R.id.vpImage);
@@ -142,33 +143,34 @@ public class ProductActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance().getReference("cart");
         auth = FirebaseAuth.getInstance();
         mAddToCart = findViewById(R.id.btnAddToCart);
-        mGia=findViewById(R.id.tvGia);
-        containerBottom=findViewById(R.id.containerBottom);
+        mGia = findViewById(R.id.tvGia);
+        containerBottom = findViewById(R.id.containerBottom);
     }
 
     public void clickAddToCart(View view) {
         final FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             mAddToCart.setEnabled(false);
-            Cart c=new Cart();
+            Cart c = new Cart();
             c.setName(sanPham.getName());
             c.setDescreption(sanPham.getDescreption());
             c.setCategory(sanPham.getCategory());
             c.setImage(sanPham.getImage().get(0));
             c.setCount(1);
-            DetailsSanPham sp=sanPham.getSanPhams().get(IndexSP);
+            DetailsSanPham sp = sanPham.getSanPhams().get(IndexSP);
             c.setSanPham(sp);
+            c.setPid(sanPham.getId());
             reference.child(user.getUid()).push().setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                              @Override
-                                                                                                              public void onComplete(@NonNull Task<Void> task) {
-                                                                                                                  mAddToCart.setEnabled(true);
-                                                                                                                  if (task.isSuccessful()) {
-                                                                                                                      Toast.makeText(ProductActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                                                                                                  } else {
-                                                                                                                      Toast.makeText(ProductActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                                                                                                                  }
-                                                                                                              }
-                                                                                                          }
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            mAddToCart.setEnabled(true);
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(ProductActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                                                                            } else {
+                                                                                                Toast.makeText(ProductActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        }
+                                                                                    }
             );
         } else {
             Toast.makeText(this, "Vui lòng đăng nhập để sử dụng tính năng này", Toast.LENGTH_SHORT).show();
