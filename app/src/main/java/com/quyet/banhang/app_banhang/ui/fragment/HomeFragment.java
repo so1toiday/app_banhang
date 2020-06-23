@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -82,7 +83,7 @@ public class HomeFragment extends Fragment {
                 }else{
                     adapter=new CategoryAdapter(getContext(),list);
                     re.setAdapter(adapter);
-                    GridLayoutManager gi = new GridLayoutManager(getContext(), 2);
+                    LinearLayoutManager gi = new LinearLayoutManager(getContext());
                     gi.setOrientation(RecyclerView.HORIZONTAL);
                     re.setLayoutManager(gi);
                 }
