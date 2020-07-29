@@ -62,12 +62,16 @@ public class CartFragment extends Fragment {
         // Required empty public constructor
     }
 
+    private View view;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+      if(view==null){
+         view= inflater.inflate(R.layout.fragment_cart, container, false);
+      }
+        return view;
 
     }
 
@@ -90,14 +94,13 @@ public class CartFragment extends Fragment {
                         tong += c.getCount() * c.getSanPham().getPrice();
                         list.add(c);
                     }
-                   if(adapter!=null){
-                       adapter.setList(list);
-                   }
-                   else {
-                       adapter = new CartAdapter(getContext(), list, user.getUid());
-                       re.setAdapter(adapter);
-                       re.setLayoutManager(new LinearLayoutManager(getContext()));
-                   }
+                    if (adapter != null) {
+                        adapter.setList(list);
+                    } else {
+                        adapter = new CartAdapter(getContext(), list, user.getUid());
+                        re.setAdapter(adapter);
+                        re.setLayoutManager(new LinearLayoutManager(getContext()));
+                    }
                     mTongTien.setText(FormatMany.getMany(tong));
                 }
 
@@ -106,54 +109,59 @@ public class CartFragment extends Fragment {
 
                 }
             });
-        }else {
+        } else {
             linearLayout.setVisibility(View.VISIBLE);
             container.setVisibility(View.GONE);
         }
-        mbtnDatMua.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user == null) return;
-                final SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm dd/MM/yyy");
-                final DatabaseReference orderreferen = reference.child("order").child(user.getUid());
-                final DatabaseReference shopreference=reference.child("shoporder");
-                for (int i = 0; i < list.size(); i++) {
-                     final String key=orderreferen.push().getKey();
-                    shopreference.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("uid",user.getUid());
-                            map.put("date",dateFormat.format(new Date()));
-                            map.put("madonhang","#"+key);
-                            shopreference.child(key).updateChildren(map);
-                        }
-                    });
-                    orderreferen.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            count++;
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("date",dateFormat.format(new Date()));
-                            map.put("uid",user.getUid());
-                            map.put("madonhang","#"+key);
-                            orderreferen.child(key).updateChildren(map);
-                            if (count >= list.size() - 1) {
-                                reference.child("cart").child(user.getUid()).removeValue();
-                                Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                                count = 0;
+        try {
+            mbtnDatMua.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (user == null) return;
+                    final SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm dd/MM/yyy");
+                    final DatabaseReference orderreferen = reference.child("order").child(user.getUid());
+                    final DatabaseReference shopreference = reference.child("shoporder");
+                    for (int i = 0; i < list.size(); i++) {
+                        final String key = orderreferen.push().getKey();
+                        shopreference.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("uid", user.getUid());
+                                map.put("date", dateFormat.format(new Date()));
+                                map.put("madonhang", "#" + key);
+                                shopreference.child(key).updateChildren(map);
                             }
-                        }
-                    });
+                        });
+                        orderreferen.child(key).setValue(list.get(i)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                count++;
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("date", dateFormat.format(new Date()));
+                                map.put("uid", user.getUid());
+                                map.put("madonhang", "#" + key);
+                                orderreferen.child(key).updateChildren(map);
+                                if (count >= list.size() - 1) {
+                                    reference.child("cart").child(user.getUid()).removeValue();
+                                    Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                    count = 0;
+                                }
+                            }
+                        });
+                    }
                 }
-            }
-        });
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(), LoginActivity.class));
-            }
-        });
+            });
+
+            mLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getContext().startActivity(new Intent(getContext(), LoginActivity.class));
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 
     private void findView(View view) {
@@ -162,8 +170,8 @@ public class CartFragment extends Fragment {
         re = view.findViewById(R.id.recyclerView);
         reference = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
-        mLogin=view.findViewById(R.id.btnLogin);
-        container=view.findViewById(R.id.container);
-        linearLayout=view.findViewById(R.id.linearLogin);
+        mLogin = view.findViewById(R.id.btnLogin);
+        container = view.findViewById(R.id.container);
+        linearLayout = view.findViewById(R.id.linearLogin);
     }
 }

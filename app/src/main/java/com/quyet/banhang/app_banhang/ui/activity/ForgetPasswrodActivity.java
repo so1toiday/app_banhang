@@ -80,31 +80,35 @@ public class ForgetPasswrodActivity extends AppCompatActivity {
 
             }
         });
-        mbtnForgetPassword.setOnClickListener(new View.OnClickListener() {
-                                                  @Override
-                                                  public void onClick(View v) {
-                                                      dialog.show();
-                                                      String Email=mEmail.getText().toString().trim();
-                                                      auth.sendPasswordResetEmail(Email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                          @Override
-                                                          public void onComplete(@NonNull Task<Void> task) {
-                                                              dialog.dismiss();
-                                                              if(task.isSuccessful()){
-                                                                  Thongbao.setMessage("Vui lòng kiểm tra Email");
-                                                                  Thongbao.show();
-                                                              }else{
-                                                                  Thongbao.setMessage("Xảy ra lỗi");
-                                                                  Thongbao.show();
+        try {
+            mbtnForgetPassword.setOnClickListener(new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View v) {
+                                                          dialog.show();
+                                                          String Email = mEmail.getText().toString().trim();
+                                                          auth.sendPasswordResetEmail(Email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                              @Override
+                                                              public void onComplete(@NonNull Task<Void> task) {
+                                                                  dialog.dismiss();
+                                                                  if (task.isSuccessful()) {
+                                                                      Thongbao.setMessage("Vui lòng kiểm tra Email");
+                                                                      Thongbao.show();
+                                                                  } else {
+                                                                      Thongbao.setMessage("Xảy ra lỗi");
+                                                                      Thongbao.show();
+                                                                  }
                                                               }
-                                                          }
-                                                      });
+                                                          });
+                                                      }
                                                   }
-                                              }
-        );
+            );
+        } catch (Exception e) {
+
+        }
     }
 
     private void findView() {
-        auth=FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Quên mật khẩu");
 
@@ -114,15 +118,15 @@ public class ForgetPasswrodActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ForgetPasswrodActivity.this,LoginActivity.class));
+                startActivity(new Intent(ForgetPasswrodActivity.this, LoginActivity.class));
                 finish();
             }
         });
         mbtnForgetPassword = findViewById(R.id.btnForgetPassword);
         mEmail = findViewById(R.id.edForgetEmail);
         tipEmail = findViewById(R.id.tipForgetEmail);
-        dialog=new ProgressDialog(ForgetPasswrodActivity.this);
-        Thongbao=new AlertDialog.Builder(ForgetPasswrodActivity.this).create();
+        dialog = new ProgressDialog(ForgetPasswrodActivity.this);
+        Thongbao = new AlertDialog.Builder(ForgetPasswrodActivity.this).create();
 
     }
 }

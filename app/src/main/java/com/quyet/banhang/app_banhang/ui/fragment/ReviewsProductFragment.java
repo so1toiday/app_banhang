@@ -70,91 +70,97 @@ public class ReviewsProductFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findView(view);
-        reference.child("comments").child(pid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<CommentModel> comments = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    comments.add(snapshot.getValue(CommentModel.class));
-                }
-                if (comments.size() > 0) {
-                    layout.setVisibility(View.GONE);
-                    mListComment.setVisibility(View.VISIBLE);
-                } else {
-                    layout.setVisibility(View.VISIBLE);
-                    mListComment.setVisibility(View.GONE);
-                }
-                if (adapter == null) {
-                    adapter = new CommentAdapter(getContext(), comments);
-                    mListComment.setAdapter(adapter);
-                    mListComment.setLayoutManager(new LinearLayoutManager(getContext()));
-                }else {
-                    adapter.setList(comments);
-                }
+        try {
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        mButtonCommnent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (firebaseUser == null) {
-                    Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng chức năng này", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_comment, null);
-                dialog.show();
-                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                dialog.setContentView(view);
-                Button mButton = view.findViewById(R.id.btnComment);
-                final EditText mContent = view.findViewById(R.id.edCommnet);
-                mButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!mContent.getText().equals("")) {
-                            reference.child("user").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    User user = dataSnapshot.getValue(User.class);
-                                    user.setUID(dataSnapshot.getKey());
-                                    CommentModel commnet = new CommentModel();
-                                    commnet.setComment(mContent.getText().toString());
-                                    commnet.setUser(user);
-                                    Date d = new Date();
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                                    String date = dateFormat.format(d);
-                                    commnet.setDate(date);
-                                    reference.child("comments").child(pid).push().setValue(commnet).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(getContext(), "Bình luận thành công", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        }
-                        dialog.dismiss();
+            reference.child("comments").child(pid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    List<CommentModel> comments = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        comments.add(snapshot.getValue(CommentModel.class));
                     }
-                });
-            }
-        });
+                    if (comments.size() > 0) {
+                        layout.setVisibility(View.GONE);
+                        mListComment.setVisibility(View.VISIBLE);
+                    } else {
+                        layout.setVisibility(View.VISIBLE);
+                        mListComment.setVisibility(View.GONE);
+                    }
+                    if (adapter == null) {
+                        adapter = new CommentAdapter(getContext(), comments);
+                        mListComment.setAdapter(adapter);
+                        mListComment.setLayoutManager(new LinearLayoutManager(getContext()));
+                    } else {
+                        adapter.setList(comments);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            mButtonCommnent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (firebaseUser == null) {
+                        Toast.makeText(getContext(), "Vui lòng đăng nhập để sử dụng chức năng này", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_comment, null);
+                    dialog.show();
+                    dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    dialog.setContentView(view);
+                    Button mButton = view.findViewById(R.id.btnComment);
+                    final EditText mContent = view.findViewById(R.id.edCommnet);
+                    mButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!mContent.getText().equals("")) {
+                                reference.child("user").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        User user = dataSnapshot.getValue(User.class);
+                                        user.setUID(dataSnapshot.getKey());
+                                        CommentModel commnet = new CommentModel();
+                                        commnet.setComment(mContent.getText().toString());
+                                        commnet.setUser(user);
+                                        Date d = new Date();
+                                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                        String date = dateFormat.format(d);
+                                        commnet.setDate(date);
+                                        reference.child("comments").child(pid).push().setValue(commnet).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "Bình luận thành công", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 
     private void findView(View view) {

@@ -148,32 +148,36 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     public void clickAddToCart(View view) {
-        final FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            mAddToCart.setEnabled(false);
-            Cart c = new Cart();
-            c.setName(sanPham.getName());
-            c.setDescreption(sanPham.getDescreption());
-            c.setCategory(sanPham.getCategory());
-            c.setImage(sanPham.getImage().get(0));
-            c.setCount(1);
-            DetailsSanPham sp = sanPham.getSanPhams().get(IndexSP);
-            c.setSanPham(sp);
-            c.setPid(sanPham.getId());
-            reference.child(user.getUid()).push().setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                                            mAddToCart.setEnabled(true);
-                                                                                            if (task.isSuccessful()) {
-                                                                                                Toast.makeText(ProductActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                                                                            } else {
-                                                                                                Toast.makeText(ProductActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+        try {
+            final FirebaseUser user = auth.getCurrentUser();
+            if (user != null) {
+                mAddToCart.setEnabled(false);
+                Cart c = new Cart();
+                c.setName(sanPham.getName());
+                c.setDescreption(sanPham.getDescreption());
+                c.setCategory(sanPham.getCategory());
+                c.setImage(sanPham.getImage().get(0));
+                c.setCount(1);
+                DetailsSanPham sp = sanPham.getSanPhams().get(IndexSP);
+                c.setSanPham(sp);
+                c.setPid(sanPham.getId());
+                reference.child(user.getUid()).push().setValue(c).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                mAddToCart.setEnabled(true);
+                                                                                                if (task.isSuccessful()) {
+                                                                                                    Toast.makeText(ProductActivity.this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                                                                                } else {
+                                                                                                    Toast.makeText(ProductActivity.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                                                                                                }
                                                                                             }
                                                                                         }
-                                                                                    }
-            );
-        } else {
-            Toast.makeText(this, "Vui lòng đăng nhập để sử dụng tính năng này", Toast.LENGTH_SHORT).show();
+                );
+            } else {
+                Toast.makeText(this, "Vui lòng đăng nhập để sử dụng tính năng này", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+
         }
 
     }

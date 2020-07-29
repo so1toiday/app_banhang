@@ -39,18 +39,27 @@ List<ThongBao> list;
         // Required empty public constructor
     }
 
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_thong_bao, container, false);
+        if(view==null){
+            view=inflater.inflate(R.layout.fragment_thong_bao, container, false);
+        }
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findView(view);
+        LinearLayoutManager l=new LinearLayoutManager(getContext());
+        l.setReverseLayout(true);
+        l.setStackFromEnd(true);
+        mNotification.setLayoutManager(l);
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -60,7 +69,6 @@ List<ThongBao> list;
                 }
                 NotificationAdapter adapter=new NotificationAdapter(getContext(),list);
                 mNotification.setAdapter(adapter);
-                mNotification.setLayoutManager(new LinearLayoutManager(getContext()));
             }
 
             @Override

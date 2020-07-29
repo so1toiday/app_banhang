@@ -38,6 +38,7 @@ public class LoginFragment extends Fragment {
     Button mLogin;
     ProgressDialog dialog;
     TextView mForgetPassword;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,52 +51,58 @@ public class LoginFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         findView(view);
         dialog.setTitle("Loading...");
-        mForgetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ForgetPasswrodActivity.class));
-            }
-        });
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-                Validate validate = new Validate();
-                boolean check = validate.checkNotEmpty(mEmail, mPassword);
-                if (!check) {
-                    Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    return;
-                }
-                final String Email = mEmail.getText().toString().trim();
-                String Password = mPassword.getText().toString().trim();
-                boolean validatePassword=validate.checkLengthPassword(Password);
-                boolean validateEmail=validate.checkEmail(Email);
-                if(!validateEmail){
-                    dialog.dismiss();
-                    Toast.makeText(getContext(), "Địa chỉ Email không đúng định dạng", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!validatePassword){
-                    dialog.dismiss();
-                    Toast.makeText(getContext()   , "Độ dài mật khẩu phải lớn hơn 6 kí tự", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        try {
 
-                auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+            mForgetPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), ForgetPasswrodActivity.class));
+                }
+            });
+            mLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.show();
+                    Validate validate = new Validate();
+                    boolean check = validate.checkNotEmpty(mEmail, mPassword);
+                    if (!check) {
+                        Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
-                        if (task.isSuccessful()) {
-                            startActivity(new Intent(getActivity(), MainActivity.class));
-                            getActivity().finish();
-                        } else {
-                            Toast.makeText(getContext(), "Tài khoản hoặc mật khẩu không chính xác", Toast.LENGTH_SHORT).show();
-                        }
+                        return;
                     }
-                });
-            }
-        });
+                    final String Email = mEmail.getText().toString().trim();
+                    String Password = mPassword.getText().toString().trim();
+                    boolean validatePassword = validate.checkLengthPassword(Password);
+                    boolean validateEmail = validate.checkEmail(Email);
+                    if (!validateEmail) {
+                        dialog.dismiss();
+                        Toast.makeText(getContext(), "Địa chỉ Email không đúng định dạng", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (!validatePassword) {
+                        dialog.dismiss();
+                        Toast.makeText(getContext(), "Độ dài mật khẩu phải lớn hơn 6 kí tự", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            dialog.dismiss();
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                getActivity().finish();
+                            } else {
+                                Toast.makeText(getContext(), "Tài khoản hoặc mật khẩu không chính xác", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -105,7 +112,7 @@ public class LoginFragment extends Fragment {
         mEmail = view.findViewById(R.id.edEmail);
         mPassword = view.findViewById(R.id.edPassword);
         mtipEmail = view.findViewById(R.id.tipEmail);
-        dialog=new ProgressDialog(getContext());
-        mForgetPassword=view.findViewById(R.id.tvForgetPassword);
+        dialog = new ProgressDialog(getContext());
+        mForgetPassword = view.findViewById(R.id.tvForgetPassword);
     }
 }

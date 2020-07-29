@@ -44,7 +44,6 @@ public class ProductFragment extends Fragment {
         // Inflate the layout for this fragment
         Bundle b=getArguments();
         sanPham= (List<DetailsSanPham>) b.getSerializable("sanphams");
-
         return inflater.inflate(R.layout.fragment_product, container, false);
     }
 

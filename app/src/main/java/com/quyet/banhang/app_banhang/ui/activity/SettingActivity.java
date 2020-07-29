@@ -144,15 +144,18 @@ public class SettingActivity extends AppCompatActivity {
         user.setName(mName.getText().toString());
         user.setEmail(mEmail.getText().toString());
         user.setImage(urlImage);
-        mReference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(SettingActivity.this, "Lưu thành công", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(SettingActivity.this, "Lưu thất bại", Toast.LENGTH_SHORT).show();
+        try {
+            mReference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(SettingActivity.this, "Lưu thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SettingActivity.this, "Lưu thất bại", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }catch(Exception e){
+        }
     }
 }

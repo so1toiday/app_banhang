@@ -1,5 +1,6 @@
 package com.quyet.banhang.app_banhang.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quyet.banhang.app_banhang.R;
 import com.quyet.banhang.app_banhang.adapter.ProductAdapter;
+import com.quyet.banhang.app_banhang.functions.FragmentChangeListenner;
 import com.quyet.banhang.app_banhang.model.SanPham;
 
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class SrearchFragment extends Fragment {
     DatabaseReference reference;
     LinearLayout lEmpty;
     FirebaseUser user;
+    List<SanPham> list;
+    ProductAdapter adapter;
+
 
     public SrearchFragment() {
         // Required empty public constructor
@@ -54,22 +60,28 @@ public class SrearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findView(view);
+        list=new ArrayList<>();
+        adapter=new ProductAdapter(getContext(),list);
+        mRecycleview.setAdapter(adapter);
+        mRecycleview.setLayoutManager(new GridLayoutManager(getContext(),2));
+
         Bundle bundle=getArguments();
-        mSearch.onActionViewExpanded();
         mSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(final String query) {
                 reference.child("products").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        List<SanPham> list=new ArrayList<>();
+                        list.clear();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             SanPham sp=snapshot.getValue(SanPham.class);
-                            if(sp.getName().contains(query)){
+
+                            if(sp.getName().toUpperCase().contains(query.toUpperCase().trim())){
                                 list.add(sp);
                             }
 
                         }
+
                         if(list.size()>0){
                             mRecycleview.setVisibility(View.VISIBLE);
                             lEmpty.setVisibility(View.GONE);
@@ -77,9 +89,8 @@ public class SrearchFragment extends Fragment {
                             mRecycleview.setVisibility(View.GONE);
                             lEmpty.setVisibility(View.VISIBLE);
                         }
-                        ProductAdapter adapter=new ProductAdapter(getContext(),list);
-                        mRecycleview.setAdapter(adapter);
-                        mRecycleview.setLayoutManager(new GridLayoutManager(getContext(),2));
+                        adapter.notifyDataSetChanged();
+
                     }
 
                     @Override
@@ -97,7 +108,8 @@ public class SrearchFragment extends Fragment {
         });
         if(bundle!=null){
             String query=bundle.getString("query");
-            mSearch.setQuery(query,true);
+            mSearch.onActionViewExpanded();
+            mSearch.setQuery(query.trim(),true);
         }
     }
 
