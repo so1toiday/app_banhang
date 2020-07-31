@@ -8,16 +8,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.sax.EndElementListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +35,8 @@ import com.quyet.banhang.app_banhang.adapter.ProductAdapter;
 import com.quyet.banhang.app_banhang.functions.FragmentChangeListenner;
 import com.quyet.banhang.app_banhang.model.SanPham;
 import com.quyet.banhang.app_banhang.model.TheLoai;
+import com.quyet.banhang.app_banhang.ui.fragment.BannerFragment;
+import com.quyet.banhang.app_banhang.ui.fragment.SrearchFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,17 +49,19 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter adapter;
     private SearchView sv;
     private NestedScrollView scrollView;
-    private int currentPosition = 0;
     private boolean isLoading = true;
     private String TAG="HomeFragment";
     private FragmentChangeListenner listenner;
     private ProgressBar progressBar;
+    private  List<SanPham> list ;
+    private ProductAdapter adapterProduct;
+    private TextView mTextSanPham;
+    private TextView mTextDanhMuc;
 
     public void setFragmentChangeListenner(FragmentChangeListenner listenner) {
         this.listenner = listenner;
     }
-    private  List<SanPham> list ;
-    private ProductAdapter adapterProduct;
+
 
     private View view;
 
@@ -80,7 +88,6 @@ public class HomeFragment extends Fragment {
         reProduct.setAdapter(adapterProduct);
         final GridLayoutManager g = new GridLayoutManager(getContext(), 2);
         reProduct.setLayoutManager(g);
-
         getChildFragmentManager().beginTransaction().replace(R.id.banner, new BannerFragment()).commit();
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                       @Override
@@ -118,12 +125,15 @@ public class HomeFragment extends Fragment {
                 }
                 isLoading=false;
                 progressBar.setVisibility(GONE);
+                mTextDanhMuc.setVisibility(View.VISIBLE);
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 isLoading=false;
                 progressBar.setVisibility(GONE);
+                mTextDanhMuc.setVisibility(View.VISIBLE);
             }
         });
 
@@ -138,10 +148,11 @@ public class HomeFragment extends Fragment {
                     list.add(sanPham);
                 }
                 adapterProduct.notifyDataSetChanged();
+                mTextSanPham.setVisibility(View.VISIBLE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                mTextSanPham.setVisibility(View.VISIBLE);
             }
         });
 
@@ -164,21 +175,25 @@ public class HomeFragment extends Fragment {
         String nodeId=list.get(list.size()-1).getId();
         reference.child("products").limitToFirst(10).startAt(nodeId).orderByKey().addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d(TAG,"ADD"+dataSnapshot.getChildrenCount());
-                int k=0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    k++;
-                    if(k==1){
-                        continue;
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int k=0;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            k++;
+                            if(k==1){
+                                continue;
+                            }
+                            SanPham sanPham = snapshot.getValue(SanPham.class);
+                            sanPham.setId(snapshot.getKey());
+                            list.add(sanPham);
+                        }
+                        adapterProduct.notifyDataSetChanged();
+                        isLoading=false;
+                        progressBar.setVisibility(GONE);
                     }
-                    SanPham sanPham = snapshot.getValue(SanPham.class);
-                    sanPham.setId(snapshot.getKey());
-                    list.add(sanPham);
-                }
-                adapterProduct.notifyDataSetChanged();
-                isLoading=false;
-                progressBar.setVisibility(GONE);
+                },1000);
             }
 
             @Override
@@ -196,6 +211,8 @@ public class HomeFragment extends Fragment {
         sv = view.findViewById(R.id.svSearch);
         scrollView = view.findViewById(R.id.scrollView);
         progressBar=view.findViewById(R.id.progressbar);
+        mTextDanhMuc=view.findViewById(R.id.textView2);
+        mTextSanPham=view.findViewById(R.id.tvSanpham);
     }
 }
 

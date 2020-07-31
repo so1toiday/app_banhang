@@ -7,6 +7,7 @@
     tools:context=".ui.activity.ThongBaoActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

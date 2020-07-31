@@ -41,14 +41,6 @@ public class BannerAdapter extends PagerAdapter {
         View view = inflater.inflate(R.layout.item_banner, container, false);
         ImageView background=view.findViewById(R.id.background);
         Picasso.with(context).load(arrayList.get(position)).into(background);
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i=new Intent(context, BaiHatActivity.class);
-//                            i.putExtra("idbanner",arrayList.get(position).getIdQuangCao());
-//                            context.startActivity(i);
-//            }
-//        });
         container.addView(view);
         return view;
     }

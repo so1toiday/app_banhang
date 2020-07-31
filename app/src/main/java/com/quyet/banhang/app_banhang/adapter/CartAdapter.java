@@ -90,6 +90,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewholder> {
                 });
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                referenceCount.child(cart.getId()).removeValue();
+                return false;
+            }
+        });
 
     }
 
